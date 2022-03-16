@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <h1>넌센스 Quiz맞추기</h1>
+    <p>3문제 중복있음</p>
+    <p><a href="" id="start">시작</a></p>
+
+    <h3 id="quiz"></h3>
+   
+    <form action="" id="input_form" style="display: none;">
+        <input type="text">
+    </form>
+
+    <p id="score"></p>
+    <p class="time" style="display: none;"> 0.00</p>
+
+
+    <script>
+       let score = 0; //몇개맞춘지
+       let count = 0; //문제 몇번풀었는지
+       let randomnum = 0; //문제랜덤출력하기위한숫자
+       let startTime = 0; //시작시간
+       let timer = 0; //멈춤시간
+
+        const quizArray = [
+        { quiz: "왕이 넘어지면", answer:"킹콩" },
+            { quiz: "오리가 얼면", answer:"언덕" },
+            { quiz: "한국의 수도는", answer:"서울" },
+            { quiz: "5+9", answer:"14" },
+            { quiz: "5+10", answer:"15" }
+        ];
+
+        $("#start").on("click", function(e) {
+            e.preventDefault();
+            //display: none 슬라이드다운으로보이게
+            $("#input_form").hide().slideDown();
+            // form안 자식태그 input태그에 포커스두기
+            $("#input_form").children().first().focus();
+           
+            quizstart();
+
+             $("#start").onclick = null;
+             $("#start").onclick = stop;
+             startTime =new Date();
+             timer = setInterval( function()  {
+                            let now = new Date();
+                            $(".time").html(((now - startTime)/1000).toFixed(2)); 
+                        }, 10);
+
+        });
+
+           $("#input_form").on("submit",function(e) {
+           e.preventDefault();
+           const answer = quizArray[randomnum].answer;
+           const user = $("#input_form").children().first().val();
+           count++;
+           if (answer == user) {
+               score++;
+               $("#score").text(`${score}점입니다`);
+           };
+            quizstart();
+            $("#input_form").children().first().val("");
+            if(count == 3) {
+                $("#input_form").hide();
+                $("#quiz").text("");
+                count = 0;
+                score = 0;
+                //멈춤시간
+                $(".time").hide().show(clearInterval(timer));
+            };
+        });
+
+        function quizstart () {
+              //퀴즈갯수
+              randomnum = Math.floor(Math.random()*quizArray.length);
+              //퀴즈질문에 퀴즈나오게
+             $("#quiz").text(quizArray[randomnum].quiz);
+        };
+                
+    </script>
+</body>
+</html>
